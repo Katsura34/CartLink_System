@@ -4,44 +4,57 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Orders - CartLink System</title>
+    <!-- Bootstrap 5.3 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../assets/css/style.css">
 </head>
 <body>
     <header>
         <nav>
-            <a href="index.html" class="logo">🛒 CartLink</a>
+            <a href="index.html" class="logo"><i class="bi bi-cart3"></i> CartLink</a>
             <ul class="nav-links">
-                <li><a href="index.html">Home</a></li>
-                <li><a href="products.html">Products</a></li>
-                <li><a href="cart.html">Cart <span class="cart-badge">0</span></a></li>
+                <li><a href="index.html"><i class="bi bi-house-door"></i> Home</a></li>
+                <li><a href="products.html"><i class="bi bi-grid"></i> Products</a></li>
+                <li><a href="cart.html"><i class="bi bi-cart"></i> Cart <span class="cart-badge">0</span></a></li>
                 <li id="auth-links"></li>
             </ul>
         </nav>
     </header>
 
-    <div class="container" style="margin-top: 2rem;">
-        <h1 class="mb-3">My Orders</h1>
+    <div class="container" style="margin-top: 2rem; margin-bottom: 3rem;">
+        <h1 class="mb-4 fw-bold"><i class="bi bi-bag-check"></i> My Orders</h1>
 
         <div id="orders-container"></div>
         
-        <div id="no-orders" class="card text-center" style="display: none;">
-            <h2>No orders yet</h2>
-            <p>Start shopping to create your first order!</p>
-            <a href="products.html" class="btn btn-primary">Browse Products</a>
+        <div id="no-orders" class="card text-center" style="display: none; padding: 4rem 2rem;">
+            <div style="font-size: 5rem; color: var(--text-light); margin-bottom: 1rem;">
+                <i class="bi bi-inbox"></i>
+            </div>
+            <h2 class="mb-3">No orders yet</h2>
+            <p class="text-muted mb-4">Start shopping to create your first order!</p>
+            <a href="products.html" class="btn btn-primary">
+                <i class="bi bi-shop"></i> Browse Products
+            </a>
         </div>
     </div>
 
     <!-- Order Details Modal -->
     <div id="order-modal" class="modal">
-        <div class="modal-content">
+        <div class="modal-content" style="max-width: 700px;">
             <div class="modal-header">
-                <h2>Order Details</h2>
+                <h2><i class="bi bi-receipt"></i> Order Details</h2>
                 <span class="modal-close" onclick="closeModal()">&times;</span>
             </div>
             <div id="order-details"></div>
         </div>
     </div>
 
+    <!-- Bootstrap 5.3 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="../assets/js/main.js"></script>
     <script>
         // Check if user is authenticated
@@ -56,8 +69,8 @@
         const authLinks = document.getElementById('auth-links');
         const user = Auth.getUser();
         authLinks.innerHTML = `
-            <li><a href="orders.html">My Orders</a></li>
-            <li><a href="#" id="logout-btn">Logout (${user.username})</a></li>
+            <li><a href="orders.html"><i class="bi bi-bag-check"></i> My Orders</a></li>
+            <li><a href="#" id="logout-btn"><i class="bi bi-box-arrow-right"></i> Logout (${user.username})</a></li>
         `;
 
         async function loadOrders() {
@@ -71,47 +84,74 @@
             if (response.success && response.data.length > 0) {
                 noOrders.style.display = 'none';
                 
+                const urlParams = new URLSearchParams(window.location.search);
+                const highlightId = urlParams.get('highlight');
+                
                 container.innerHTML = response.data.map(order => `
-                    <div class="card" style="margin-bottom: 1rem;">
-                        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1rem;">
-                            <div>
-                                <h3>Order #${order.reference_number}</h3>
-                                <p style="color: var(--text-light); font-size: 0.875rem; margin-top: 0.5rem;">
-                                    ${formatDate(order.created_at)}
-                                </p>
+                    <div class="card mb-3 ${order.id == highlightId ? 'border-primary border-2' : ''}">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <div>
+                                    <h3 class="mb-2">
+                                        <i class="bi bi-receipt-cutoff text-primary"></i> 
+                                        Order #${order.reference_number}
+                                    </h3>
+                                    <p class="text-muted mb-0">
+                                        <i class="bi bi-calendar"></i> ${formatDate(order.created_at)}
+                                    </p>
+                                </div>
+                                <span class="badge bg-${getStatusBadgeClass(order.status)} fs-6 px-3 py-2">
+                                    ${capitalizeWords(order.status)}
+                                </span>
                             </div>
-                            <span class="status-badge ${getStatusClass(order.status)}">
-                                ${capitalizeWords(order.status)}
-                            </span>
-                        </div>
-                        
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <div>
-                                <p style="font-size: 0.875rem; color: var(--text-light);">Total Amount</p>
-                                <p style="font-size: 1.5rem; font-weight: bold; color: var(--primary-color);">
-                                    $${parseFloat(order.total_amount).toFixed(2)}
-                                </p>
+                            
+                            <div class="row align-items-center">
+                                <div class="col-md-8">
+                                    <div class="mb-2">
+                                        <strong><i class="bi bi-geo-alt"></i> Delivery Address:</strong>
+                                        <p class="text-muted mb-0">${order.delivery_address}</p>
+                                    </div>
+                                    <div>
+                                        <strong><i class="bi bi-telephone"></i> Contact:</strong>
+                                        <span class="text-muted">${order.contact_phone}</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                                    <p class="text-muted small mb-1">Total Amount</p>
+                                    <h4 class="text-primary fw-bold mb-3">
+                                        $${parseFloat(order.total_amount).toFixed(2)}
+                                    </h4>
+                                    <button onclick="viewOrder(${order.id})" class="btn btn-primary">
+                                        <i class="bi bi-eye"></i> View Details
+                                    </button>
+                                </div>
                             </div>
-                            <button onclick="viewOrder(${order.id})" class="btn btn-primary">
-                                View Details
-                            </button>
                         </div>
                     </div>
                 `).join('');
                 
-                // Highlight order if specified in URL
-                const urlParams = new URLSearchParams(window.location.search);
-                const highlightId = urlParams.get('highlight');
                 if (highlightId) {
-                    const order = response.data.find(o => o.id == highlightId);
-                    if (order) {
-                        viewOrder(highlightId);
+                    const highlightedCard = container.querySelector('.border-primary');
+                    if (highlightedCard) {
+                        highlightedCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
                     }
                 }
             } else {
                 container.innerHTML = '';
                 noOrders.style.display = 'block';
             }
+        }
+
+        function getStatusBadgeClass(status) {
+            const statusClasses = {
+                'pending': 'warning',
+                'confirmed': 'info',
+                'preparing': 'primary',
+                'out_for_delivery': 'primary',
+                'completed': 'success',
+                'cancelled': 'danger'
+            };
+            return statusClasses[status] || 'secondary';
         }
 
         async function viewOrder(orderId) {
@@ -121,52 +161,70 @@
             
             if (response.success) {
                 const order = response.data;
-                const modal = document.getElementById('order-modal');
-                const details = document.getElementById('order-details');
+                const detailsDiv = document.getElementById('order-details');
                 
-                details.innerHTML = `
-                    <div style="margin-bottom: 1.5rem;">
-                        <h3>Order #${order.reference_number}</h3>
-                        <span class="status-badge ${getStatusClass(order.status)}">
-                            ${capitalizeWords(order.status)}
-                        </span>
+                detailsDiv.innerHTML = `
+                    <div class="mb-4">
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <div>
+                                <h4>Order #${order.reference_number}</h4>
+                                <p class="text-muted mb-0">
+                                    <i class="bi bi-calendar"></i> ${formatDate(order.created_at)}
+                                </p>
+                            </div>
+                            <span class="badge bg-${getStatusBadgeClass(order.status)} fs-6 px-3 py-2">
+                                ${capitalizeWords(order.status)}
+                            </span>
+                        </div>
+                        
+                        <div class="card bg-light mb-3">
+                            <div class="card-body">
+                                <h6 class="fw-bold mb-2"><i class="bi bi-truck"></i> Delivery Information</h6>
+                                <p class="mb-1"><strong>Address:</strong> ${order.delivery_address}</p>
+                                <p class="mb-1"><strong>Contact:</strong> ${order.contact_phone}</p>
+                                ${order.notes ? `<p class="mb-0"><strong>Notes:</strong> ${order.notes}</p>` : ''}
+                            </div>
+                        </div>
+                        
+                        <h6 class="fw-bold mb-3"><i class="bi bi-cart"></i> Order Items</h6>
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Product</th>
+                                        <th>Price</th>
+                                        <th>Quantity</th>
+                                        <th class="text-end">Subtotal</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${order.items.map(item => `
+                                        <tr>
+                                            <td>${item.product_name}</td>
+                                            <td>$${parseFloat(item.product_price).toFixed(2)}</td>
+                                            <td>${item.quantity}</td>
+                                            <td class="text-end">$${parseFloat(item.subtotal).toFixed(2)}</td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                                <tfoot>
+                                    <tr class="table-light">
+                                        <td colspan="3" class="text-end fw-bold">Total:</td>
+                                        <td class="text-end fw-bold text-primary fs-5">
+                                            $${parseFloat(order.total_amount).toFixed(2)}
+                                        </td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
                     </div>
                     
-                    <div style="margin-bottom: 1.5rem;">
-                        <p><strong>Order Date:</strong> ${formatDate(order.created_at)}</p>
-                        <p><strong>Delivery Address:</strong> ${order.delivery_address}</p>
-                        <p><strong>Contact Phone:</strong> ${order.contact_phone}</p>
-                        ${order.notes ? `<p><strong>Notes:</strong> ${order.notes}</p>` : ''}
-                    </div>
-                    
-                    <h4 style="margin-bottom: 1rem;">Order Items</h4>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Product</th>
-                                <th>Price</th>
-                                <th>Quantity</th>
-                                <th>Subtotal</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${order.items.map(item => `
-                                <tr>
-                                    <td>${item.product_name}</td>
-                                    <td>$${parseFloat(item.product_price).toFixed(2)}</td>
-                                    <td>${item.quantity}</td>
-                                    <td>$${parseFloat(item.subtotal).toFixed(2)}</td>
-                                </tr>
-                            `).join('')}
-                        </tbody>
-                    </table>
-                    
-                    <div style="margin-top: 1.5rem; text-align: right;">
-                        <h3>Total: $${parseFloat(order.total_amount).toFixed(2)}</h3>
-                    </div>
+                    <button onclick="closeModal()" class="btn btn-secondary w-100">
+                        Close
+                    </button>
                 `;
                 
-                modal.classList.add('active');
+                document.getElementById('order-modal').classList.add('active');
             } else {
                 showAlert('Failed to load order details', 'error');
             }
@@ -176,7 +234,7 @@
             document.getElementById('order-modal').classList.remove('active');
         }
 
-        // Close modal when clicking outside
+        // Close modal on background click
         document.getElementById('order-modal').addEventListener('click', (e) => {
             if (e.target.id === 'order-modal') {
                 closeModal();
