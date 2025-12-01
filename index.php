@@ -4,6 +4,7 @@
  * Redirects to customer homepage
  */
 
-header('Location: /CartLink_System/frontend/customer/index.html');
+// Use relative path for flexibility
+header('Location: frontend/customer/index.html');
 exit;
 ?>

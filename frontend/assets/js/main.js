@@ -3,7 +3,13 @@
  * API configuration and helper functions
  */
 
-const API_BASE_URL = '/backend/api';
+// Configuration - adjust based on your deployment
+const CONFIG = {
+    basePath: '/CartLink_System', // Change to '/' for root deployment or your folder name
+    apiPath: '/backend/api'
+};
+
+const API_BASE_URL = CONFIG.basePath + CONFIG.apiPath;
 
 // Storage helpers
 const Storage = {
@@ -31,7 +37,7 @@ const Auth = {
     logout: () => {
         Storage.remove('token');
         Storage.remove('user');
-        window.location.href = '/frontend/customer/login.html';
+        window.location.href = CONFIG.basePath + '/frontend/customer/login.html';
     },
     isAuthenticated: () => !!Auth.getToken(),
     isAdmin: () => {

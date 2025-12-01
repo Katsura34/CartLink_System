@@ -49,7 +49,10 @@ function sanitizeInput($data) {
  * @param string $secret
  * @return string
  */
-function generateToken($payload, $secret = 'cartlink_secret_key_2024') {
+function generateToken($payload, $secret = null) {
+    if ($secret === null) {
+        $secret = defined('JWT_SECRET_KEY') ? JWT_SECRET_KEY : 'cartlink_secret_key_2024';
+    }
     $header = json_encode(['typ' => 'JWT', 'alg' => 'HS256']);
     $payload = json_encode($payload);
     
@@ -68,7 +71,10 @@ function generateToken($payload, $secret = 'cartlink_secret_key_2024') {
  * @param string $secret
  * @return array|false
  */
-function verifyToken($token, $secret = 'cartlink_secret_key_2024') {
+function verifyToken($token, $secret = null) {
+    if ($secret === null) {
+        $secret = defined('JWT_SECRET_KEY') ? JWT_SECRET_KEY : 'cartlink_secret_key_2024';
+    }
     $parts = explode('.', $token);
     
     if (count($parts) !== 3) {

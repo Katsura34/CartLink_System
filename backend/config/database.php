@@ -4,15 +4,25 @@
  * CartLink System - MySQL Database Connection
  */
 
+require_once __DIR__ . '/config.php';
+
 class Database {
-    // Database credentials
-    private $host = "localhost";
-    private $db_name = "cartlink_db";
-    private $username = "root";
-    private $password = "";
-    private $charset = "utf8mb4";
+    // Database credentials from config
+    private $host;
+    private $db_name;
+    private $username;
+    private $password;
+    private $charset;
     
     public $conn;
+    
+    public function __construct() {
+        $this->host = DB_HOST;
+        $this->db_name = DB_NAME;
+        $this->username = DB_USER;
+        $this->password = DB_PASS;
+        $this->charset = DB_CHARSET;
+    }
     
     /**
      * Establish database connection
