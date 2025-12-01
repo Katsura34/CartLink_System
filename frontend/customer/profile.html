@@ -93,12 +93,13 @@
                             </div>
                             
                             <div class="form-floating mb-3">
-                                <input type="password" id="new_password" class="form-control" placeholder="New Password" required minlength="6">
+                                <input type="password" id="new_password" class="form-control" placeholder="New Password" required minlength="8">
                                 <label for="new_password"><i class="bi bi-lock-fill"></i> New Password *</label>
+                                <small class="text-muted d-block mt-1">Must be at least 8 characters with uppercase, lowercase, and number</small>
                             </div>
                             
                             <div class="form-floating mb-3">
-                                <input type="password" id="confirm_password" class="form-control" placeholder="Confirm Password" required minlength="6">
+                                <input type="password" id="confirm_password" class="form-control" placeholder="Confirm Password" required minlength="8">
                                 <label for="confirm_password"><i class="bi bi-lock-fill"></i> Confirm New Password *</label>
                             </div>
                             
@@ -161,6 +162,12 @@
             <li><a href="orders.html"><i class="bi bi-bag-check"></i> My Orders</a></li>
             <li><a href="#" id="logout-btn"><i class="bi bi-box-arrow-right"></i> Logout (${user.username})</a></li>
         `;
+
+        // Setup logout handler
+        document.getElementById('logout-btn').addEventListener('click', (e) => {
+            e.preventDefault();
+            Auth.logout();
+        });
 
         // Load user profile
         async function loadProfile() {
@@ -225,8 +232,18 @@
                 return;
             }
             
-            if (newPassword.length < 6) {
-                showAlert('Password must be at least 6 characters', 'error');
+            if (newPassword.length < 8) {
+                showAlert('Password must be at least 8 characters', 'error');
+                return;
+            }
+            
+            // Validate password complexity
+            const hasUpper = /[A-Z]/.test(newPassword);
+            const hasLower = /[a-z]/.test(newPassword);
+            const hasNumber = /[0-9]/.test(newPassword);
+            
+            if (!hasUpper || !hasLower || !hasNumber) {
+                showAlert('Password must contain uppercase, lowercase, and number', 'error');
                 return;
             }
             

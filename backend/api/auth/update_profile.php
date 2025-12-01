@@ -41,6 +41,17 @@ if (empty($data->full_name)) {
     sendResponse(false, 'Full name is required', null, 400);
 }
 
+// Validate full name length
+if (strlen($data->full_name) > 100) {
+    sendResponse(false, 'Full name must be 100 characters or less', null, 400);
+}
+
+// Sanitize full name
+$fullName = sanitizeInput($data->full_name);
+if (empty($fullName)) {
+    sendResponse(false, 'Invalid full name', null, 400);
+}
+
 try {
     $database = new Database();
     $db = $database->getConnection();
@@ -53,10 +64,10 @@ try {
               WHERE id = :user_id";
     
     $stmt = $db->prepare($query);
-    $stmt->bindParam(':full_name', $data->full_name);
+    $stmt->bindParam(':full_name', $fullName);
     
-    $phone = $data->phone ?? null;
-    $address = $data->address ?? null;
+    $phone = isset($data->phone) ? sanitizeInput($data->phone) : null;
+    $address = isset($data->address) ? sanitizeInput($data->address) : null;
     $stmt->bindParam(':phone', $phone);
     $stmt->bindParam(':address', $address);
     $stmt->bindParam(':user_id', $auth['user_id']);

@@ -41,9 +41,18 @@ if (empty($data->current_password) || empty($data->new_password)) {
     sendResponse(false, 'Current password and new password are required', null, 400);
 }
 
-// Validate password length
-if (strlen($data->new_password) < 6) {
-    sendResponse(false, 'New password must be at least 6 characters', null, 400);
+// Validate password length and strength
+if (strlen($data->new_password) < 8) {
+    sendResponse(false, 'New password must be at least 8 characters', null, 400);
+}
+
+// Check for password complexity
+$hasUpper = preg_match('/[A-Z]/', $data->new_password);
+$hasLower = preg_match('/[a-z]/', $data->new_password);
+$hasNumber = preg_match('/[0-9]/', $data->new_password);
+
+if (!$hasUpper || !$hasLower || !$hasNumber) {
+    sendResponse(false, 'Password must contain at least one uppercase letter, one lowercase letter, and one number', null, 400);
 }
 
 try {

@@ -161,18 +161,23 @@
 
         // Load user profile to pre-fill form
         async function loadUserProfile() {
-            const response = await API.get('/auth/profile.php');
-            
-            if (response.success && response.data) {
-                const userData = response.data;
+            try {
+                const response = await API.get('/auth/profile.php');
                 
-                // Pre-fill phone and address if available
-                if (userData.phone) {
-                    document.getElementById('contact_phone').value = userData.phone;
+                if (response.success && response.data) {
+                    const userData = response.data;
+                    
+                    // Pre-fill phone and address if available
+                    if (userData.phone) {
+                        document.getElementById('contact_phone').value = userData.phone;
+                    }
+                    if (userData.address) {
+                        document.getElementById('delivery_address').value = userData.address;
+                    }
                 }
-                if (userData.address) {
-                    document.getElementById('delivery_address').value = userData.address;
-                }
+            } catch (error) {
+                console.error('Failed to load user profile:', error);
+                // Silently fail - user can still enter manually
             }
         }
 
