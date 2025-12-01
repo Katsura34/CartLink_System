@@ -6,16 +6,22 @@ A complete web-based ordering system built with PHP API backend, MySQL database,
 
 ### Customer Features
 - User registration and login
+- **User profile management with saved addresses**
 - Browse products with search and category filtering
 - Shopping cart functionality
+- **Multiple payment method options (COD, Credit Card, Debit Card, PayPal, Bank Transfer)**
+- **Auto-fill delivery information from saved profile**
+- **Payment method confirmation before order placement**
 - Secure checkout process
 - Order tracking and history
 - Real-time order status updates
+- **Change password with enhanced security**
 
 ### Admin Features
 - Admin dashboard with analytics
 - Product management (CRUD operations)
 - Order management with status updates
+- **View payment methods for all orders**
 - Category management
 - Inventory tracking and low-stock alerts
 - Customer order viewing
@@ -71,6 +77,7 @@ A complete web-based ordering system built with PHP API backend, MySQL database,
 - Products: `http://localhost/CartLink_System/frontend/customer/products.html`
 - Login: `http://localhost/CartLink_System/frontend/customer/login.html`
 - Register: `http://localhost/CartLink_System/frontend/customer/register.html`
+- **Profile Settings**: `http://localhost/CartLink_System/frontend/customer/profile.html`
 
 #### Admin Interface
 - Dashboard: `http://localhost/CartLink_System/frontend/admin/dashboard.html`
@@ -126,6 +133,9 @@ CartLink_System/
 ### Authentication
 - `POST /backend/api/auth/login.php` - User login
 - `POST /backend/api/auth/register.php` - User registration
+- **`GET /backend/api/auth/profile.php` - Get user profile**
+- **`POST /backend/api/auth/update_profile.php` - Update user profile**
+- **`POST /backend/api/auth/change_password.php` - Change password**
 
 ### Products
 - `GET /backend/api/products/list.php` - List all products
@@ -138,7 +148,7 @@ CartLink_System/
 - `GET /backend/api/categories/list.php` - List all categories
 
 ### Orders
-- `POST /backend/api/orders/create.php` - Create order
+- `POST /backend/api/orders/create.php` - Create order **(with payment method)**
 - `GET /backend/api/orders/list.php` - List orders
 - `GET /backend/api/orders/get.php?id={id}` - Get order details
 - `POST /backend/api/orders/update_status.php` - Update order status (Admin)
@@ -165,17 +175,26 @@ CartLink_System/
 
 ### For Customers
 1. Register a new account or login
-2. Browse products and add items to cart
-3. Proceed to checkout and enter delivery details
-4. Track order status from "My Orders" page
-5. View order history and details
+2. **Set up your profile with default delivery address and phone number**
+3. Browse products and add items to cart
+4. **Proceed to checkout (address and phone auto-filled from profile)**
+5. **Select payment method (COD, Credit Card, Debit Card, PayPal, or Bank Transfer)**
+6. **Confirm payment method and total amount**
+7. Track order status from "My Orders" page
+8. View order history and details with payment method information
 
 ### For Administrators
 1. Login with admin credentials
 2. View dashboard with analytics
 3. Manage products (add, edit, delete, update stock)
-4. Manage orders (view details, update status)
+4. **Manage orders (view details with payment methods, update status)**
 5. Monitor low-stock products
+
+## New Features Documentation
+
+For detailed information about new features:
+- **Payment Methods**: See [PAYMENT_METHODS_UPDATE.md](PAYMENT_METHODS_UPDATE.md)
+- **User Profile Settings**: See [USER_PROFILE_GUIDE.md](USER_PROFILE_GUIDE.md)
 
 ## Troubleshooting
 
