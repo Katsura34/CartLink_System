@@ -3,14 +3,26 @@
 # Enable rewrite engine
 RewriteEngine On
 
-# Pass Authorization header to PHP
+# Pass Authorization header to PHP (multiple methods for compatibility)
+# Method 1: Standard Authorization header
 RewriteCond %{HTTP:Authorization} .
 RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+# Method 2: Handle Authorization from different header names
+RewriteCond %{HTTP:authorization} .
+RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:authorization}]
+
+# Method 3: Support for CGI/FastCGI environments
+SetEnvIf Authorization "(.*)" HTTP_AUTHORIZATION=$1
 
 # CORS Headers
 Header set Access-Control-Allow-Origin "*"
 Header set Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
-Header set Access-Control-Allow-Headers "Content-Type, Authorization"
+Header set Access-Control-Allow-Headers "Content-Type, Authorization, X-Requested-With"
+
+# Handle preflight OPTIONS requests
+RewriteCond %{REQUEST_METHOD} OPTIONS
+RewriteRule ^(.*)$ $1 [R=200,L]
 
 # Prevent directory listing
 Options -Indexes
