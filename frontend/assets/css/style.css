@@ -180,7 +180,8 @@ nav {
     border-color: #cbd5e1;
 }
 
-select.form-control {
+select.form-control, 
+select.form-select {
     cursor: pointer;
 }
 
