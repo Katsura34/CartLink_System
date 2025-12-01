@@ -72,6 +72,47 @@
                                 <input type="tel" id="contact_phone" class="form-control" placeholder="Phone" required>
                                 <label for="contact_phone"><i class="bi bi-telephone"></i> Contact Phone *</label>
                             </div>
+
+                            <div class="mb-4">
+                                <label class="form-label fw-bold"><i class="bi bi-credit-card-2-front"></i> Payment Method *</label>
+                                <div class="list-group">
+                                    <label class="list-group-item d-flex align-items-center">
+                                        <input class="form-check-input me-3" type="radio" name="payment_method" value="cod" checked>
+                                        <div class="flex-grow-1">
+                                            <div class="fw-bold"><i class="bi bi-cash-coin text-success"></i> Cash on Delivery</div>
+                                            <small class="text-muted">Pay when your order arrives</small>
+                                        </div>
+                                    </label>
+                                    <label class="list-group-item d-flex align-items-center">
+                                        <input class="form-check-input me-3" type="radio" name="payment_method" value="credit_card">
+                                        <div class="flex-grow-1">
+                                            <div class="fw-bold"><i class="bi bi-credit-card text-primary"></i> Credit Card</div>
+                                            <small class="text-muted">Visa, Mastercard, American Express</small>
+                                        </div>
+                                    </label>
+                                    <label class="list-group-item d-flex align-items-center">
+                                        <input class="form-check-input me-3" type="radio" name="payment_method" value="debit_card">
+                                        <div class="flex-grow-1">
+                                            <div class="fw-bold"><i class="bi bi-credit-card text-info"></i> Debit Card</div>
+                                            <small class="text-muted">Direct payment from your bank account</small>
+                                        </div>
+                                    </label>
+                                    <label class="list-group-item d-flex align-items-center">
+                                        <input class="form-check-input me-3" type="radio" name="payment_method" value="paypal">
+                                        <div class="flex-grow-1">
+                                            <div class="fw-bold"><i class="bi bi-paypal text-primary"></i> PayPal</div>
+                                            <small class="text-muted">Pay securely with PayPal</small>
+                                        </div>
+                                    </label>
+                                    <label class="list-group-item d-flex align-items-center">
+                                        <input class="form-check-input me-3" type="radio" name="payment_method" value="bank_transfer">
+                                        <div class="flex-grow-1">
+                                            <div class="fw-bold"><i class="bi bi-bank text-warning"></i> Bank Transfer</div>
+                                            <small class="text-muted">Direct bank transfer</small>
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
                             
                             <div class="form-floating mb-4">
                                 <textarea id="notes" class="form-control" placeholder="Notes" style="height: 80px;"></textarea>
@@ -113,17 +154,35 @@
         const authLinks = document.getElementById('auth-links');
         const user = Auth.getUser();
         authLinks.innerHTML = `
+            <li><a href="profile.html"><i class="bi bi-person-circle"></i> Profile</a></li>
             <li><a href="orders.html"><i class="bi bi-bag-check"></i> My Orders</a></li>
             <li><a href="#" id="logout-btn"><i class="bi bi-box-arrow-right"></i> Logout (${user.username})</a></li>
         `;
 
-        // Pre-fill form with user data
-        if (user.phone) {
-            document.getElementById('contact_phone').value = user.phone;
+        // Load user profile to pre-fill form
+        async function loadUserProfile() {
+            try {
+                const response = await API.get('/auth/profile.php');
+                
+                if (response.success && response.data) {
+                    const userData = response.data;
+                    
+                    // Pre-fill phone and address if available
+                    if (userData.phone) {
+                        document.getElementById('contact_phone').value = userData.phone;
+                    }
+                    if (userData.address) {
+                        document.getElementById('delivery_address').value = userData.address;
+                    }
+                }
+            } catch (error) {
+                console.error('Failed to load user profile:', error);
+                // Silently fail - user can still enter manually
+            }
         }
-        if (user.address) {
-            document.getElementById('delivery_address').value = user.address;
-        }
+
+        // Load profile data
+        loadUserProfile();
 
         function displayOrderSummary() {
             const cartItems = Cart.getItems();
@@ -178,6 +237,30 @@
                 return;
             }
             
+            // Get selected payment method
+            const paymentMethodRadio = document.querySelector('input[name="payment_method"]:checked');
+            const paymentMethod = paymentMethodRadio.value;
+            
+            // Get payment method name for confirmation
+            const paymentMethodNames = {
+                'cod': 'Cash on Delivery',
+                'credit_card': 'Credit Card',
+                'debit_card': 'Debit Card',
+                'paypal': 'PayPal',
+                'bank_transfer': 'Bank Transfer'
+            };
+            const paymentMethodName = paymentMethodNames[paymentMethod];
+            
+            // Get order total
+            const total = Cart.getTotal();
+            
+            // Confirm payment method
+            const confirmMessage = `Please confirm your order:\n\nPayment Method: ${paymentMethodName}\nTotal Amount: $${total.toFixed(2)}\n\nDo you want to proceed?`;
+            
+            if (!confirm(confirmMessage)) {
+                return;
+            }
+            
             const orderData = {
                 items: cartItems.map(item => ({
                     product_id: item.id,
@@ -185,6 +268,7 @@
                 })),
                 delivery_address: document.getElementById('delivery_address').value,
                 contact_phone: document.getElementById('contact_phone').value,
+                payment_method: paymentMethod,
                 notes: document.getElementById('notes').value
             };
             
@@ -196,11 +280,11 @@
             
             if (response.success) {
                 Cart.clear();
-                showAlert('Order placed successfully!', 'success');
+                showAlert(`Order placed successfully! Payment Method: ${paymentMethodName}`, 'success');
                 
                 setTimeout(() => {
                     window.location.href = `orders.html?highlight=${response.data.order_id}`;
-                }, 1500);
+                }, 2000);
             } else {
                 showAlert(response.message, 'error');
             }

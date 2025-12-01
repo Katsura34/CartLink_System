@@ -70,6 +70,17 @@
 
         let allOrders = [];
 
+        function getPaymentMethodName(method) {
+            const names = {
+                'cod': 'Cash on Delivery',
+                'credit_card': 'Credit Card',
+                'debit_card': 'Debit Card',
+                'paypal': 'PayPal',
+                'bank_transfer': 'Bank Transfer'
+            };
+            return names[method] || 'Cash on Delivery';
+        }
+
         async function loadOrders() {
             showLoading();
             const response = await API.get('/orders/list.php');
@@ -98,6 +109,7 @@
                                 <th>Customer</th>
                                 <th>Date</th>
                                 <th>Amount</th>
+                                <th>Payment</th>
                                 <th>Status</th>
                                 <th>Actions</th>
                             </tr>
@@ -112,6 +124,7 @@
                                     </td>
                                     <td>${formatDate(order.created_at)}</td>
                                     <td style="font-weight: bold;">$${parseFloat(order.total_amount).toFixed(2)}</td>
+                                    <td>${getPaymentMethodName(order.payment_method)}</td>
                                     <td>
                                         <span class="status-badge ${getStatusClass(order.status)}">
                                             ${capitalizeWords(order.status)}
@@ -165,6 +178,7 @@
                         <p><strong>Email:</strong> ${order.customer_email}</p>
                         <p><strong>Phone:</strong> ${order.contact_phone}</p>
                         <p><strong>Delivery Address:</strong> ${order.delivery_address}</p>
+                        <p><strong>Payment Method:</strong> ${getPaymentMethodName(order.payment_method)}</p>
                         ${order.notes ? `<p><strong>Notes:</strong> ${order.notes}</p>` : ''}
                         <p><strong>Order Date:</strong> ${formatDate(order.created_at)}</p>
                     </div>

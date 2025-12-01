@@ -51,6 +51,7 @@
         if (Auth.isAuthenticated()) {
             const user = Auth.getUser();
             authLinks.innerHTML = `
+                <li><a href="profile.html"><i class="bi bi-person-circle"></i> Profile</a></li>
                 <li><a href="orders.html"><i class="bi bi-bag-check"></i> My Orders</a></li>
                 <li><a href="#" id="logout-btn"><i class="bi bi-box-arrow-right"></i> Logout (${user.username})</a></li>
             `;

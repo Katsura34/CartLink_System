@@ -33,6 +33,14 @@ if (empty($data->items) || empty($data->delivery_address) || empty($data->contac
     sendResponse(false, 'Items, delivery address, and contact phone are required', null, 400);
 }
 
+// Validate payment method if provided
+$validPaymentMethods = ['cod', 'credit_card', 'debit_card', 'paypal', 'bank_transfer'];
+$paymentMethod = isset($data->payment_method) ? $data->payment_method : 'cod';
+
+if (!in_array($paymentMethod, $validPaymentMethods)) {
+    sendResponse(false, 'Invalid payment method', null, 400);
+}
+
 try {
     $database = new Database();
     $db = $database->getConnection();
@@ -80,8 +88,8 @@ try {
     $referenceNumber = generateReferenceNumber();
     
     // Create order
-    $query = "INSERT INTO orders (user_id, reference_number, total_amount, status, delivery_address, contact_phone, notes) 
-              VALUES (:user_id, :reference_number, :total_amount, 'pending', :delivery_address, :contact_phone, :notes)";
+    $query = "INSERT INTO orders (user_id, reference_number, total_amount, status, delivery_address, contact_phone, payment_method, notes) 
+              VALUES (:user_id, :reference_number, :total_amount, 'pending', :delivery_address, :contact_phone, :payment_method, :notes)";
     
     $stmt = $db->prepare($query);
     $stmt->bindParam(':user_id', $auth['user_id']);
@@ -89,6 +97,7 @@ try {
     $stmt->bindParam(':total_amount', $totalAmount);
     $stmt->bindParam(':delivery_address', $data->delivery_address);
     $stmt->bindParam(':contact_phone', $data->contact_phone);
+    $stmt->bindParam(':payment_method', $paymentMethod);
     
     $notes = $data->notes ?? null;
     $stmt->bindParam(':notes', $notes);
@@ -124,7 +133,8 @@ try {
     sendResponse(true, 'Order created successfully', [
         'order_id' => $orderId,
         'reference_number' => $referenceNumber,
-        'total_amount' => $totalAmount
+        'total_amount' => $totalAmount,
+        'payment_method' => $paymentMethod
     ], 201);
 } catch(Exception $e) {
     if ($db->inTransaction()) {
