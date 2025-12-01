@@ -16,9 +16,10 @@ define('APP_VERSION', '1.0.0');
 define('APP_BASE_PATH', '/CartLink_System/');
 
 // Security Configuration
-// IMPORTANT: Change this secret key for production!
-// Generate a secure random key: openssl rand -base64 32
-define('JWT_SECRET_KEY', 'cartlink_secret_key_2024_CHANGE_IN_PRODUCTION');
+// ⚠️ CRITICAL: Generate a NEW secure random key for production!
+// Use: openssl rand -base64 32
+// Or: php -r "echo bin2hex(random_bytes(32));"
+define('JWT_SECRET_KEY', 'CHANGE_THIS_TO_A_SECURE_RANDOM_KEY_IN_PRODUCTION_' . bin2hex(random_bytes(8)));
 define('JWT_EXPIRY_HOURS', 24); // Token validity in hours
 
 // API Configuration
@@ -45,7 +46,7 @@ define('CORS_ALLOWED_METHODS', 'GET, POST, PUT, DELETE, OPTIONS');
 define('CORS_ALLOWED_HEADERS', 'Content-Type, Authorization');
 
 // Security Settings
-define('PASSWORD_MIN_LENGTH', 6);
+define('PASSWORD_MIN_LENGTH', 8); // Minimum 8 characters for adequate security
 define('SESSION_TIMEOUT', 3600); // 1 hour in seconds
 
 // Order Settings

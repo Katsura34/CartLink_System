@@ -86,12 +86,30 @@ function verifyToken($token, $secret = null) {
     $signature = hash_hmac('sha256', $base64UrlHeader . "." . $base64UrlPayload, $secret, true);
     $base64UrlSignatureCheck = str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($signature));
     
-    if ($base64UrlSignature !== $base64UrlSignatureCheck) {
+    // Use hash_equals to prevent timing attacks
+    if (!hash_equals($base64UrlSignature, $base64UrlSignatureCheck)) {
         return false;
     }
     
-    $payload = base64_decode(str_replace(['-', '_'], ['+', '/'], $base64UrlPayload));
-    return json_decode($payload, true);
+    // Validate base64 decoding
+    $payloadDecoded = base64_decode(str_replace(['-', '_'], ['+', '/'], $base64UrlPayload));
+    if ($payloadDecoded === false) {
+        return false;
+    }
+    
+    $payload = json_decode($payloadDecoded, true);
+    
+    // Validate JSON decoding
+    if ($payload === null && json_last_error() !== JSON_ERROR_NONE) {
+        return false;
+    }
+    
+    // Check token expiration
+    if (isset($payload['exp']) && $payload['exp'] < time()) {
+        return false;
+    }
+    
+    return $payload;
 }
 
 /**

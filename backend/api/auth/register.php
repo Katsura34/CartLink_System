@@ -25,6 +25,11 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 // Get posted data
 $data = json_decode(file_get_contents("php://input"));
 
+// Validate JSON decoding
+if ($data === null && json_last_error() !== JSON_ERROR_NONE) {
+    sendResponse(false, 'Invalid JSON data', null, 400);
+}
+
 // Validate input
 if (empty($data->username) || empty($data->email) || empty($data->password) || empty($data->full_name)) {
     sendResponse(false, 'All fields are required', null, 400);
