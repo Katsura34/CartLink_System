@@ -1,0 +1,25 @@
+# CartLink System - Apache Configuration
+
+# Enable rewrite engine
+RewriteEngine On
+
+# CORS Headers
+Header set Access-Control-Allow-Origin "*"
+Header set Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
+Header set Access-Control-Allow-Headers "Content-Type, Authorization"
+
+# Prevent directory listing
+Options -Indexes
+
+# Set default charset
+AddDefaultCharset UTF-8
+
+# PHP settings
+php_value upload_max_filesize 10M
+php_value post_max_size 10M
+php_value max_execution_time 300
+php_value max_input_time 300
+
+# Error pages
+ErrorDocument 404 /CartLink_System/frontend/customer/index.html
+ErrorDocument 500 /CartLink_System/frontend/customer/index.html
