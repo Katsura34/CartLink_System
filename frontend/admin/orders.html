@@ -78,7 +78,7 @@
                 'paypal': 'PayPal',
                 'bank_transfer': 'Bank Transfer'
             };
-            return names[method] || method;
+            return names[method] || 'Cash on Delivery';
         }
 
         async function loadOrders() {
