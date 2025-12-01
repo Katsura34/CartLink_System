@@ -141,9 +141,8 @@ function sendResponse($success, $message, $data = null, $statusCode = 200) {
  * @return string|null
  */
 function getAuthToken() {
-    $token = null;
-    
     // Method 1: Try getallheaders() first (Apache with mod_php)
+    // Note: getallheaders() is an alias for apache_request_headers()
     if (function_exists('getallheaders')) {
         $headers = getallheaders();
         
@@ -174,25 +173,12 @@ function getAuthToken() {
         }
     }
     
-    // Method 4: Check for Authorization from apache_request_headers (if available)
-    if (function_exists('apache_request_headers')) {
-        $headers = apache_request_headers();
-        foreach (['Authorization', 'authorization'] as $header) {
-            if (isset($headers[$header])) {
-                $matches = [];
-                if (preg_match('/Bearer\s+(.*)$/i', $headers[$header], $matches)) {
-                    return trim($matches[1]);
-                }
-            }
-        }
-    }
-    
-    // Method 5: Check PHP_AUTH_BEARER if set directly
+    // Method 4: Check PHP_AUTH_BEARER if set directly
     if (isset($_SERVER['PHP_AUTH_BEARER'])) {
         return trim($_SERVER['PHP_AUTH_BEARER']);
     }
     
-    // Method 6: Check for Authorization in environment variable (set by .htaccess)
+    // Method 5: Check for Authorization in environment variable (set by .htaccess)
     if (isset($_ENV['HTTP_AUTHORIZATION'])) {
         $matches = [];
         if (preg_match('/Bearer\s+(.*)$/i', $_ENV['HTTP_AUTHORIZATION'], $matches)) {

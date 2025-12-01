@@ -27,7 +27,8 @@ $auth = verifyAuth();
 // Prepare detailed debug information
 $debugInfo = [
     'token_found' => !empty($token),
-    'token_preview' => $token ? substr($token, 0, 20) . '...' : null,
+    'token_length' => $token ? strlen($token) : 0,
+    'token_format_valid' => $token ? (count(explode('.', $token)) === 3) : false,
     'auth_valid' => $auth !== false,
     'auth_data' => $auth ? $auth : null,
     'server_vars' => [
