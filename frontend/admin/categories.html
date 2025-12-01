@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Categories - CartLink Admin</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="dashboard.html" class="logo">🛒 CartLink Admin</a>
+            <ul class="nav-links">
+                <li><a href="dashboard.html">Dashboard</a></li>
+                <li><a href="products.html">Products</a></li>
+                <li><a href="orders.html">Orders</a></li>
+                <li><a href="categories.html">Categories</a></li>
+                <li><a href="#" id="logout-btn">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="container" style="margin-top: 2rem;">
+        <h1 class="mb-3">Manage Categories</h1>
+
+        <div class="grid grid-3" id="categories-container"></div>
+    </div>
+
+    <script src="../assets/js/main.js"></script>
+    <script>
+        // Check if user is admin
+        if (!Auth.isAuthenticated() || !Auth.isAdmin()) {
+            window.location.href = '../customer/login.html';
+        }
+
+        async function loadCategories() {
+            showLoading();
+            const response = await API.get('/categories/list.php');
+            hideLoading();
+            
+            if (response.success) {
+                const container = document.getElementById('categories-container');
+                container.innerHTML = response.data.map(category => `
+                    <div class="card">
+                        <h3>${category.name}</h3>
+                        <p style="color: var(--text-light); margin-top: 0.5rem;">
+                            ${category.description || 'No description'}
+                        </p>
+                    </div>
+                `).join('');
+            }
+        }
+
+        loadCategories();
+    </script>
+</body>
+</html>

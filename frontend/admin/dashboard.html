@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - CartLink System</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="dashboard.html" class="logo">🛒 CartLink Admin</a>
+            <ul class="nav-links">
+                <li><a href="dashboard.html">Dashboard</a></li>
+                <li><a href="products.html">Products</a></li>
+                <li><a href="orders.html">Orders</a></li>
+                <li><a href="categories.html">Categories</a></li>
+                <li><a href="#" id="logout-btn">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="container" style="margin-top: 2rem;">
+        <h1 class="mb-3">Dashboard</h1>
+
+        <div class="grid grid-3" style="margin-bottom: 2rem;">
+            <div class="card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+                <h2 style="color: white;">Total Orders</h2>
+                <p style="font-size: 3rem; font-weight: bold; margin: 1rem 0;" id="total-orders">0</p>
+            </div>
+            <div class="card" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white;">
+                <h2 style="color: white;">Total Revenue</h2>
+                <p style="font-size: 3rem; font-weight: bold; margin: 1rem 0;" id="total-revenue">$0</p>
+            </div>
+            <div class="card" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color: white;">
+                <h2 style="color: white;">Total Products</h2>
+                <p style="font-size: 3rem; font-weight: bold; margin: 1rem 0;" id="total-products">0</p>
+            </div>
+        </div>
+
+        <div class="grid grid-2">
+            <div class="card">
+                <h2 class="mb-3">Recent Orders</h2>
+                <div id="recent-orders"></div>
+            </div>
+
+            <div class="card">
+                <h2 class="mb-3">Low Stock Products</h2>
+                <div id="low-stock"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../assets/js/main.js"></script>
+    <script>
+        // Check if user is admin
+        if (!Auth.isAuthenticated() || !Auth.isAdmin()) {
+            showAlert('Unauthorized access', 'error');
+            setTimeout(() => {
+                window.location.href = '../customer/login.html';
+            }, 2000);
+        }
+
+        async function loadDashboardData() {
+            showLoading();
+            
+            // Load orders
+            const ordersResponse = await API.get('/orders/list.php');
+            // Load products
+            const productsResponse = await API.get('/products/list.php');
+            
+            hideLoading();
+            
+            if (ordersResponse.success) {
+                const orders = ordersResponse.data;
+                document.getElementById('total-orders').textContent = orders.length;
+                
+                // Calculate total revenue
+                const revenue = orders.reduce((sum, order) => sum + parseFloat(order.total_amount), 0);
+                document.getElementById('total-revenue').textContent = formatCurrency(revenue);
+                
+                // Display recent orders
+                const recentOrders = orders.slice(0, 5);
+                const recentOrdersDiv = document.getElementById('recent-orders');
+                
+                if (recentOrders.length > 0) {
+                    recentOrdersDiv.innerHTML = `
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Order #</th>
+                                    <th>Customer</th>
+                                    <th>Status</th>
+                                    <th>Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${recentOrders.map(order => `
+                                    <tr>
+                                        <td>${order.reference_number}</td>
+                                        <td>${order.customer_name}</td>
+                                        <td><span class="status-badge ${getStatusClass(order.status)}">${capitalizeWords(order.status)}</span></td>
+                                        <td>$${parseFloat(order.total_amount).toFixed(2)}</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    `;
+                } else {
+                    recentOrdersDiv.innerHTML = '<p>No orders yet</p>';
+                }
+            }
+            
+            if (productsResponse.success) {
+                const products = productsResponse.data;
+                document.getElementById('total-products').textContent = products.length;
+                
+                // Display low stock products
+                const lowStock = products.filter(p => p.stock < 10).slice(0, 5);
+                const lowStockDiv = document.getElementById('low-stock');
+                
+                if (lowStock.length > 0) {
+                    lowStockDiv.innerHTML = `
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Product</th>
+                                    <th>Stock</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${lowStock.map(product => `
+                                    <tr>
+                                        <td>${product.name}</td>
+                                        <td style="color: ${product.stock === 0 ? 'var(--danger-color)' : 'var(--warning-color)'}; font-weight: bold;">
+                                            ${product.stock}
+                                        </td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    `;
+                } else {
+                    lowStockDiv.innerHTML = '<p>All products have sufficient stock</p>';
+                }
+            }
+        }
+
+        loadDashboardData();
+    </script>
+</body>
+</html>

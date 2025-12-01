@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CartLink - Online Ordering System</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="index.html" class="logo">🛒 CartLink</a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="products.html">Products</a></li>
+                <li><a href="cart.html">Cart <span class="cart-badge">0</span></a></li>
+                <li id="auth-links"></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="container" style="margin-top: 3rem;">
+        <section style="text-align: center; padding: 4rem 0;">
+            <h1 style="font-size: 3rem; margin-bottom: 1rem;">Welcome to CartLink</h1>
+            <p style="font-size: 1.25rem; color: var(--text-light); margin-bottom: 2rem;">
+                Your one-stop shop for quality products delivered to your doorstep
+            </p>
+            <a href="products.html" class="btn btn-primary" style="font-size: 1.125rem; padding: 1rem 2rem;">
+                Shop Now
+            </a>
+        </section>
+
+        <section style="margin-top: 4rem;">
+            <h2 class="text-center mb-3">Featured Products</h2>
+            <div id="featured-products" class="grid grid-4"></div>
+        </section>
+
+        <section style="margin-top: 4rem; padding: 3rem 0;">
+            <h2 class="text-center mb-3">Why Choose CartLink?</h2>
+            <div class="grid grid-3" style="margin-top: 2rem;">
+                <div class="card text-center">
+                    <h3 style="color: var(--primary-color); font-size: 2rem;">📦</h3>
+                    <h4>Fast Delivery</h4>
+                    <p>Get your orders delivered quickly and safely</p>
+                </div>
+                <div class="card text-center">
+                    <h3 style="color: var(--primary-color); font-size: 2rem;">✅</h3>
+                    <h4>Quality Products</h4>
+                    <p>Only the best products from trusted suppliers</p>
+                </div>
+                <div class="card text-center">
+                    <h3 style="color: var(--primary-color); font-size: 2rem;">💳</h3>
+                    <h4>Secure Checkout</h4>
+                    <p>Your information is safe with us</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer style="background-color: var(--dark-color); color: var(--white); text-align: center; padding: 2rem; margin-top: 4rem;">
+        <p>&copy; 2024 CartLink System. All rights reserved.</p>
+    </footer>
+
+    <script src="../assets/js/main.js"></script>
+    <script>
+        // Update navigation based on auth status
+        const authLinks = document.getElementById('auth-links');
+        if (Auth.isAuthenticated()) {
+            const user = Auth.getUser();
+            authLinks.innerHTML = `
+                <li><a href="orders.html">My Orders</a></li>
+                <li><a href="#" id="logout-btn">Logout (${user.username})</a></li>
+            `;
+        } else {
+            authLinks.innerHTML = `
+                <li><a href="login.html">Login</a></li>
+                <li><a href="register.html">Register</a></li>
+            `;
+        }
+
+        // Load featured products
+        async function loadFeaturedProducts() {
+            const response = await API.get('/products/list.php?status=active');
+            
+            if (response.success && response.data.length > 0) {
+                const featured = response.data.slice(0, 4);
+                const container = document.getElementById('featured-products');
+                
+                container.innerHTML = featured.map(product => `
+                    <div class="product-card">
+                        <div class="product-image" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                            ${product.image_url ? `<img src="${product.image_url}" alt="${product.name}" style="width: 100%; height: 200px; object-fit: cover;">` : ''}
+                        </div>
+                        <div class="product-body">
+                            <h3 class="product-title">${product.name}</h3>
+                            <p style="color: var(--text-light); font-size: 0.875rem; margin-bottom: 0.5rem;">
+                                ${product.description ? product.description.substring(0, 80) + '...' : 'No description'}
+                            </p>
+                            <div class="product-price">$${parseFloat(product.price).toFixed(2)}</div>
+                            <button onclick="addToCart(${product.id})" class="btn btn-primary" style="width: 100%;">
+                                Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        async function addToCart(productId) {
+            const response = await API.get(`/products/get.php?id=${productId}`);
+            
+            if (response.success) {
+                Cart.addItem(response.data);
+                showAlert('Product added to cart!', 'success');
+            } else {
+                showAlert('Failed to add product to cart', 'error');
+            }
+        }
+
+        loadFeaturedProducts();
+    </script>
+</body>
+</html>
