@@ -4,69 +4,99 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register - CartLink System</title>
+    <!-- Bootstrap 5.3 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../assets/css/style.css">
 </head>
 <body>
     <header>
         <nav>
-            <a href="index.html" class="logo">🛒 CartLink</a>
+            <a href="index.html" class="logo"><i class="bi bi-cart3"></i> CartLink</a>
             <ul class="nav-links">
-                <li><a href="index.html">Home</a></li>
-                <li><a href="products.html">Products</a></li>
-                <li><a href="login.html">Login</a></li>
+                <li><a href="index.html"><i class="bi bi-house-door"></i> Home</a></li>
+                <li><a href="products.html"><i class="bi bi-grid"></i> Products</a></li>
+                <li><a href="login.html"><i class="bi bi-box-arrow-in-right"></i> Login</a></li>
             </ul>
         </nav>
     </header>
 
-    <div class="container" style="max-width: 600px; margin-top: 3rem;">
+    <div class="container" style="max-width: 600px; margin-top: 3rem; margin-bottom: 3rem;">
         <div class="card">
-            <h1 class="text-center mb-3">Create Account</h1>
+            <div class="text-center mb-4">
+                <div style="font-size: 3rem; color: var(--primary-color); margin-bottom: 1rem;">
+                    <i class="bi bi-person-plus-fill"></i>
+                </div>
+                <h1 class="fw-bold">Create Account</h1>
+                <p class="text-muted">Join CartLink and start shopping today</p>
+            </div>
             
             <form id="register-form">
-                <div class="form-group">
-                    <label for="username">Username</label>
-                    <input type="text" id="username" class="form-control" required>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <div class="form-floating">
+                            <input type="text" id="username" class="form-control" placeholder="Username" required>
+                            <label for="username"><i class="bi bi-person"></i> Username</label>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6 mb-3">
+                        <div class="form-floating">
+                            <input type="email" id="email" class="form-control" placeholder="Email" required>
+                            <label for="email"><i class="bi bi-envelope"></i> Email Address</label>
+                        </div>
+                    </div>
                 </div>
                 
-                <div class="form-group">
-                    <label for="email">Email Address</label>
-                    <input type="email" id="email" class="form-control" required>
+                <div class="form-floating mb-3">
+                    <input type="text" id="full_name" class="form-control" placeholder="Full Name" required>
+                    <label for="full_name"><i class="bi bi-person-badge"></i> Full Name</label>
                 </div>
                 
-                <div class="form-group">
-                    <label for="full_name">Full Name</label>
-                    <input type="text" id="full_name" class="form-control" required>
+                <div class="form-floating mb-3">
+                    <input type="tel" id="phone" class="form-control" placeholder="Phone Number">
+                    <label for="phone"><i class="bi bi-telephone"></i> Phone Number (Optional)</label>
                 </div>
                 
-                <div class="form-group">
-                    <label for="phone">Phone Number (Optional)</label>
-                    <input type="tel" id="phone" class="form-control">
+                <div class="form-floating mb-3">
+                    <textarea id="address" class="form-control" placeholder="Address" style="height: 100px;"></textarea>
+                    <label for="address"><i class="bi bi-geo-alt"></i> Address (Optional)</label>
                 </div>
                 
-                <div class="form-group">
-                    <label for="address">Address (Optional)</label>
-                    <textarea id="address" class="form-control" rows="3"></textarea>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <div class="form-floating">
+                            <input type="password" id="password" class="form-control" placeholder="Password" required minlength="6">
+                            <label for="password"><i class="bi bi-lock"></i> Password</label>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6 mb-3">
+                        <div class="form-floating">
+                            <input type="password" id="confirm_password" class="form-control" placeholder="Confirm Password" required>
+                            <label for="confirm_password"><i class="bi bi-lock-fill"></i> Confirm Password</label>
+                        </div>
+                    </div>
                 </div>
                 
-                <div class="form-group">
-                    <label for="password">Password</label>
-                    <input type="password" id="password" class="form-control" required minlength="6">
-                </div>
-                
-                <div class="form-group">
-                    <label for="confirm_password">Confirm Password</label>
-                    <input type="password" id="confirm_password" class="form-control" required>
-                </div>
-                
-                <button type="submit" class="btn btn-primary" style="width: 100%;">Register</button>
+                <button type="submit" class="btn btn-primary w-100">
+                    <i class="bi bi-person-check"></i> Register
+                </button>
             </form>
             
-            <p class="text-center mt-3">
-                Already have an account? <a href="login.html">Login here</a>
-            </p>
+            <div class="text-center mt-4">
+                <p class="text-muted">
+                    Already have an account? <a href="login.html" class="fw-bold text-decoration-none">Login here</a>
+                </p>
+            </div>
         </div>
     </div>
 
+    <!-- Bootstrap 5.3 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="../assets/js/main.js"></script>
     <script>
         document.getElementById('register-form').addEventListener('submit', async (e) => {
