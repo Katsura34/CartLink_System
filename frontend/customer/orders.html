@@ -111,9 +111,13 @@
                                         <strong><i class="bi bi-geo-alt"></i> Delivery Address:</strong>
                                         <p class="text-muted mb-0">${order.delivery_address}</p>
                                     </div>
-                                    <div>
+                                    <div class="mb-2">
                                         <strong><i class="bi bi-telephone"></i> Contact:</strong>
                                         <span class="text-muted">${order.contact_phone}</span>
+                                    </div>
+                                    <div>
+                                        <strong><i class="${getPaymentMethodIcon(order.payment_method)}"></i> Payment:</strong>
+                                        <span class="text-muted">${getPaymentMethodName(order.payment_method)}</span>
                                     </div>
                                 </div>
                                 <div class="col-md-4 text-md-end mt-3 mt-md-0">
@@ -154,6 +158,28 @@
             return statusClasses[status] || 'secondary';
         }
 
+        function getPaymentMethodIcon(method) {
+            const icons = {
+                'cod': 'bi-cash-coin',
+                'credit_card': 'bi-credit-card',
+                'debit_card': 'bi-credit-card',
+                'paypal': 'bi-paypal',
+                'bank_transfer': 'bi-bank'
+            };
+            return icons[method] || 'bi-cash';
+        }
+
+        function getPaymentMethodName(method) {
+            const names = {
+                'cod': 'Cash on Delivery',
+                'credit_card': 'Credit Card',
+                'debit_card': 'Debit Card',
+                'paypal': 'PayPal',
+                'bank_transfer': 'Bank Transfer'
+            };
+            return names[method] || method;
+        }
+
         async function viewOrder(orderId) {
             showLoading();
             const response = await API.get(`/orders/get.php?id=${orderId}`);
@@ -182,6 +208,7 @@
                                 <h6 class="fw-bold mb-2"><i class="bi bi-truck"></i> Delivery Information</h6>
                                 <p class="mb-1"><strong>Address:</strong> ${order.delivery_address}</p>
                                 <p class="mb-1"><strong>Contact:</strong> ${order.contact_phone}</p>
+                                <p class="mb-1"><strong>Payment Method:</strong> <i class="${getPaymentMethodIcon(order.payment_method)}"></i> ${getPaymentMethodName(order.payment_method)}</p>
                                 ${order.notes ? `<p class="mb-0"><strong>Notes:</strong> ${order.notes}</p>` : ''}
                             </div>
                         </div>

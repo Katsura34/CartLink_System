@@ -72,6 +72,47 @@
                                 <input type="tel" id="contact_phone" class="form-control" placeholder="Phone" required>
                                 <label for="contact_phone"><i class="bi bi-telephone"></i> Contact Phone *</label>
                             </div>
+
+                            <div class="mb-4">
+                                <label class="form-label fw-bold"><i class="bi bi-credit-card-2-front"></i> Payment Method *</label>
+                                <div class="list-group">
+                                    <label class="list-group-item d-flex align-items-center">
+                                        <input class="form-check-input me-3" type="radio" name="payment_method" value="cod" checked>
+                                        <div class="flex-grow-1">
+                                            <div class="fw-bold"><i class="bi bi-cash-coin text-success"></i> Cash on Delivery</div>
+                                            <small class="text-muted">Pay when your order arrives</small>
+                                        </div>
+                                    </label>
+                                    <label class="list-group-item d-flex align-items-center">
+                                        <input class="form-check-input me-3" type="radio" name="payment_method" value="credit_card">
+                                        <div class="flex-grow-1">
+                                            <div class="fw-bold"><i class="bi bi-credit-card text-primary"></i> Credit Card</div>
+                                            <small class="text-muted">Visa, Mastercard, American Express</small>
+                                        </div>
+                                    </label>
+                                    <label class="list-group-item d-flex align-items-center">
+                                        <input class="form-check-input me-3" type="radio" name="payment_method" value="debit_card">
+                                        <div class="flex-grow-1">
+                                            <div class="fw-bold"><i class="bi bi-credit-card text-info"></i> Debit Card</div>
+                                            <small class="text-muted">Direct payment from your bank account</small>
+                                        </div>
+                                    </label>
+                                    <label class="list-group-item d-flex align-items-center">
+                                        <input class="form-check-input me-3" type="radio" name="payment_method" value="paypal">
+                                        <div class="flex-grow-1">
+                                            <div class="fw-bold"><i class="bi bi-paypal text-primary"></i> PayPal</div>
+                                            <small class="text-muted">Pay securely with PayPal</small>
+                                        </div>
+                                    </label>
+                                    <label class="list-group-item d-flex align-items-center">
+                                        <input class="form-check-input me-3" type="radio" name="payment_method" value="bank_transfer">
+                                        <div class="flex-grow-1">
+                                            <div class="fw-bold"><i class="bi bi-bank text-warning"></i> Bank Transfer</div>
+                                            <small class="text-muted">Direct bank transfer</small>
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
                             
                             <div class="form-floating mb-4">
                                 <textarea id="notes" class="form-control" placeholder="Notes" style="height: 80px;"></textarea>
@@ -178,6 +219,9 @@
                 return;
             }
             
+            // Get selected payment method
+            const paymentMethod = document.querySelector('input[name="payment_method"]:checked').value;
+            
             const orderData = {
                 items: cartItems.map(item => ({
                     product_id: item.id,
@@ -185,6 +229,7 @@
                 })),
                 delivery_address: document.getElementById('delivery_address').value,
                 contact_phone: document.getElementById('contact_phone').value,
+                payment_method: paymentMethod,
                 notes: document.getElementById('notes').value
             };
             

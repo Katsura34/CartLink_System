@@ -57,6 +57,7 @@ CREATE TABLE IF NOT EXISTS orders (
     status ENUM('pending', 'confirmed', 'preparing', 'out_for_delivery', 'completed', 'cancelled') DEFAULT 'pending',
     delivery_address TEXT NOT NULL,
     contact_phone VARCHAR(20) NOT NULL,
+    payment_method ENUM('cod', 'credit_card', 'debit_card', 'paypal', 'bank_transfer') DEFAULT 'cod',
     notes TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -64,6 +65,7 @@ CREATE TABLE IF NOT EXISTS orders (
     INDEX idx_user (user_id),
     INDEX idx_reference (reference_number),
     INDEX idx_status (status),
+    INDEX idx_payment_method (payment_method),
     INDEX idx_created (created_at)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 

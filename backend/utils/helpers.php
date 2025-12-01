@@ -141,11 +141,38 @@ function sendResponse($success, $message, $data = null, $statusCode = 200) {
  * @return string|null
  */
 function getAuthToken() {
-    $headers = getallheaders();
+    // Try getallheaders() first (Apache)
+    if (function_exists('getallheaders')) {
+        $headers = getallheaders();
+        
+        if (isset($headers['Authorization'])) {
+            $matches = [];
+            if (preg_match('/Bearer\s+(.*)$/i', $headers['Authorization'], $matches)) {
+                return $matches[1];
+            }
+        }
+        
+        // Check for lowercase version
+        if (isset($headers['authorization'])) {
+            $matches = [];
+            if (preg_match('/Bearer\s+(.*)$/i', $headers['authorization'], $matches)) {
+                return $matches[1];
+            }
+        }
+    }
     
-    if (isset($headers['Authorization'])) {
+    // Fallback to $_SERVER (works in all environments)
+    if (isset($_SERVER['HTTP_AUTHORIZATION'])) {
         $matches = [];
-        if (preg_match('/Bearer\s+(.*)$/i', $headers['Authorization'], $matches)) {
+        if (preg_match('/Bearer\s+(.*)$/i', $_SERVER['HTTP_AUTHORIZATION'], $matches)) {
+            return $matches[1];
+        }
+    }
+    
+    // Check for redirect_http_authorization (some server configurations)
+    if (isset($_SERVER['REDIRECT_HTTP_AUTHORIZATION'])) {
+        $matches = [];
+        if (preg_match('/Bearer\s+(.*)$/i', $_SERVER['REDIRECT_HTTP_AUTHORIZATION'], $matches)) {
             return $matches[1];
         }
     }
