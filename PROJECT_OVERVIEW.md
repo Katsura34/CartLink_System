@@ -14,7 +14,7 @@
 
 ```
 ┌─────────────────────────────────────────────┐
-│          CARTLINK ORDERING SYSTEM           │
+│      CARTLINK FOOD ORDERING SYSTEM          │
 └─────────────────────────────────────────────┘
 
 ┌───────────────┐         ┌──────────────┐
@@ -22,7 +22,7 @@
 │   FRONTEND    │         │   FRONTEND   │
 │               │         │              │
 │ - Homepage    │         │ - Dashboard  │
-│ - Products    │         │ - Products   │
+│ - Menu        │         │ - Menu Items │
 │ - Cart        │         │ - Orders     │
 │ - Checkout    │         │ - Categories │
 │ - Orders      │         │              │
@@ -64,8 +64,8 @@
 - [x] CORS headers configuration
 
 ### Customer Features ✅
-- [x] Browse products with images
-- [x] Search and filter products
+- [x] Browse menu items with images
+- [x] Search and filter menu items
 - [x] Category-based browsing
 - [x] Shopping cart (LocalStorage)
 - [x] Add/remove/update cart items
@@ -89,14 +89,14 @@
 - [x] Stock restoration on cancellation
 
 ### Product Management ✅
-- [x] Create new products
-- [x] Edit product details
-- [x] Delete products
-- [x] Upload product images (URL)
-- [x] Set product prices
+- [x] Create new menu items
+- [x] Edit menu item details
+- [x] Delete menu items
+- [x] Upload item images (URL)
+- [x] Set item prices
 - [x] Manage stock levels
-- [x] Activate/deactivate products
-- [x] Categorize products
+- [x] Activate/deactivate items
+- [x] Categorize menu items
 
 ### Order Management ✅
 - [x] Place orders with validation
@@ -154,7 +154,7 @@ CartLink_System/
 ├── 📂 frontend/
 │   ├── 📂 customer/
 │   │   ├── index.html              # Homepage
-│   │   ├── products.html           # Product catalog
+│   │   ├── products.html           # Menu catalog
 │   │   ├── cart.html               # Shopping cart
 │   │   ├── checkout.html           # Checkout page
 │   │   ├── orders.html             # Order history
@@ -162,7 +162,7 @@ CartLink_System/
 │   │   └── register.html           # Customer register
 │   ├── 📂 admin/
 │   │   ├── dashboard.html          # Admin dashboard
-│   │   ├── products.html           # Product management
+│   │   ├── products.html           # Menu item management
 │   │   ├── orders.html             # Order management
 │   │   └── categories.html         # Category list
 │   └── 📂 assets/
@@ -317,8 +317,8 @@ This project demonstrates:
 
 ## 🎯 Conclusion
 
-The CartLink System is a fully functional, production-ready web-based ordering platform that meets all the requirements specified in the original instruction document. It demonstrates best practices in web development, security, and user experience design.
+The CartLink System is a fully functional, production-ready web-based food ordering platform that meets all the requirements specified in the original instruction document. It demonstrates best practices in web development, security, and user experience design.
 
 ---
 
-**Built with ❤️ for modern e-commerce**
+**Built with ❤️ for modern food delivery**
