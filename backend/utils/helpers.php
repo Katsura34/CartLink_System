@@ -141,39 +141,48 @@ function sendResponse($success, $message, $data = null, $statusCode = 200) {
  * @return string|null
  */
 function getAuthToken() {
-    // Try getallheaders() first (Apache)
+    // Method 1: Try getallheaders() first (Apache with mod_php)
+    // Note: getallheaders() is an alias for apache_request_headers()
     if (function_exists('getallheaders')) {
         $headers = getallheaders();
         
-        if (isset($headers['Authorization'])) {
-            $matches = [];
-            if (preg_match('/Bearer\s+(.*)$/i', $headers['Authorization'], $matches)) {
-                return $matches[1];
-            }
-        }
-        
-        // Check for lowercase version
-        if (isset($headers['authorization'])) {
-            $matches = [];
-            if (preg_match('/Bearer\s+(.*)$/i', $headers['authorization'], $matches)) {
-                return $matches[1];
+        // Check both capitalized and lowercase versions
+        foreach (['Authorization', 'authorization'] as $header) {
+            if (isset($headers[$header])) {
+                $matches = [];
+                if (preg_match('/Bearer\s+(.*)$/i', $headers[$header], $matches)) {
+                    return trim($matches[1]);
+                }
             }
         }
     }
     
-    // Fallback to $_SERVER (works in all environments)
+    // Method 2: Check $_SERVER['HTTP_AUTHORIZATION'] (standard CGI/FastCGI)
     if (isset($_SERVER['HTTP_AUTHORIZATION'])) {
         $matches = [];
         if (preg_match('/Bearer\s+(.*)$/i', $_SERVER['HTTP_AUTHORIZATION'], $matches)) {
-            return $matches[1];
+            return trim($matches[1]);
         }
     }
     
-    // Check for redirect_http_authorization (some server configurations)
+    // Method 3: Check for REDIRECT_HTTP_AUTHORIZATION (Apache with mod_rewrite)
     if (isset($_SERVER['REDIRECT_HTTP_AUTHORIZATION'])) {
         $matches = [];
         if (preg_match('/Bearer\s+(.*)$/i', $_SERVER['REDIRECT_HTTP_AUTHORIZATION'], $matches)) {
-            return $matches[1];
+            return trim($matches[1]);
+        }
+    }
+    
+    // Method 4: Check PHP_AUTH_BEARER if set directly
+    if (isset($_SERVER['PHP_AUTH_BEARER'])) {
+        return trim($_SERVER['PHP_AUTH_BEARER']);
+    }
+    
+    // Method 5: Check for Authorization in environment variable (set by .htaccess)
+    if (isset($_ENV['HTTP_AUTHORIZATION'])) {
+        $matches = [];
+        if (preg_match('/Bearer\s+(.*)$/i', $_ENV['HTTP_AUTHORIZATION'], $matches)) {
+            return trim($matches[1]);
         }
     }
     
