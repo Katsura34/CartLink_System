@@ -1,0 +1,32 @@
+# CartLink Backend API - Apache Configuration
+# Ensures Authorization headers are properly passed to PHP scripts
+
+# Enable rewrite engine
+RewriteEngine On
+
+# Pass Authorization header to PHP (multiple methods for maximum compatibility)
+# Method 1: Standard Authorization header
+RewriteCond %{HTTP:Authorization} .
+RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+# Method 2: Handle Authorization from different header names (case-insensitive)
+RewriteCond %{HTTP:authorization} .
+RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:authorization}]
+
+# Method 3: Support for CGI/FastCGI environments
+SetEnvIf Authorization "(.*)" HTTP_AUTHORIZATION=$1
+
+# CORS Headers for API endpoints
+Header always set Access-Control-Allow-Origin "*"
+Header always set Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
+Header always set Access-Control-Allow-Headers "Content-Type, Authorization, X-Requested-With"
+
+# Handle preflight OPTIONS requests
+RewriteCond %{REQUEST_METHOD} OPTIONS
+RewriteRule ^(.*)$ $1 [R=200,L]
+
+# Prevent directory listing
+Options -Indexes
+
+# Set default charset
+AddDefaultCharset UTF-8
