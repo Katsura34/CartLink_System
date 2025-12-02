@@ -5,7 +5,7 @@
 
 // Configuration - adjust based on your deployment
 const CONFIG = {
-    basePath: '/CartLink_System', // Change to '/' for root deployment or your folder name
+    basePath: '', // Change to '/CartLink_System' for subdirectory deployment or your folder name
     apiPath: '/backend/api'
 };
 
