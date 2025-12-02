@@ -1,13 +1,13 @@
-# CartLink System - Web-Based Ordering System
+# CartLink System - Food Ordering System
 
-A complete web-based ordering system built with PHP API backend, MySQL database, and HTML/CSS/JavaScript frontend.
+A complete web-based food ordering system built with PHP API backend, MySQL database, and HTML/CSS/JavaScript frontend.
 
 ## Features
 
 ### Customer Features
 - User registration and login
 - **User profile management with saved addresses**
-- Browse products with search and category filtering
+- Browse menu items with search and category filtering
 - Shopping cart functionality
 - **Multiple payment method options (COD, Credit Card, Debit Card, PayPal, Bank Transfer)**
 - **Auto-fill delivery information from saved profile**
@@ -19,7 +19,7 @@ A complete web-based ordering system built with PHP API backend, MySQL database,
 
 ### Admin Features
 - Admin dashboard with analytics
-- Product management (CRUD operations)
+- Menu item management (CRUD operations)
 - Order management with status updates
 - **View payment methods for all orders**
 - Category management
@@ -74,14 +74,14 @@ A complete web-based ordering system built with PHP API backend, MySQL database,
 
 #### Customer Interface
 - Homepage: `http://localhost/CartLink_System/frontend/customer/index.html`
-- Products: `http://localhost/CartLink_System/frontend/customer/products.html`
+- Menu: `http://localhost/CartLink_System/frontend/customer/products.html`
 - Login: `http://localhost/CartLink_System/frontend/customer/login.html`
 - Register: `http://localhost/CartLink_System/frontend/customer/register.html`
 - **Profile Settings**: `http://localhost/CartLink_System/frontend/customer/profile.html`
 
 #### Admin Interface
 - Dashboard: `http://localhost/CartLink_System/frontend/admin/dashboard.html`
-- Products: `http://localhost/CartLink_System/frontend/admin/products.html`
+- Menu Items: `http://localhost/CartLink_System/frontend/admin/products.html`
 - Orders: `http://localhost/CartLink_System/frontend/admin/orders.html`
 
 ## Default Credentials
@@ -176,7 +176,7 @@ CartLink_System/
 ### For Customers
 1. Register a new account or login
 2. **Set up your profile with default delivery address and phone number**
-3. Browse products and add items to cart
+3. Browse menu and add food items to cart
 4. **Proceed to checkout (address and phone auto-filled from profile)**
 5. **Select payment method (COD, Credit Card, Debit Card, PayPal, or Bank Transfer)**
 6. **Confirm payment method and total amount**
@@ -186,9 +186,9 @@ CartLink_System/
 ### For Administrators
 1. Login with admin credentials
 2. View dashboard with analytics
-3. Manage products (add, edit, delete, update stock)
+3. Manage menu items (add, edit, delete, update stock)
 4. **Manage orders (view details with payment methods, update status)**
-5. Monitor low-stock products
+5. Monitor low-stock items
 
 ## New Features Documentation
 

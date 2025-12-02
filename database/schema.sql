@@ -1,5 +1,5 @@
 -- CartLink System Database Schema
--- MySQL Database for Web-Based Ordering System
+-- MySQL Database for Web-Based Food Ordering System
 
 CREATE DATABASE IF NOT EXISTS cartlink_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE cartlink_db;
@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS users (
     INDEX idx_username (username)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Categories table
+-- Categories table (Food categories)
 CREATE TABLE IF NOT EXISTS categories (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS categories (
     INDEX idx_name (name)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Products table
+-- Products table (Menu items / Food items)
 CREATE TABLE IF NOT EXISTS products (
     id INT AUTO_INCREMENT PRIMARY KEY,
     category_id INT,
@@ -102,21 +102,24 @@ CREATE TABLE IF NOT EXISTS admin_logs (
 INSERT INTO users (username, email, password, full_name, role) VALUES
 ('admin', 'admin@cartlink.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'System Administrator', 'admin');
 
--- Insert sample categories
+-- Insert sample categories (Food categories)
 INSERT INTO categories (name, description) VALUES
-('Electronics', 'Electronic devices and gadgets'),
-('Clothing', 'Fashion and apparel'),
-('Food & Beverages', 'Food items and drinks'),
-('Home & Garden', 'Home improvement and garden supplies'),
-('Books', 'Books and magazines');
+('Appetizers', 'Delicious starters and appetizers'),
+('Main Course', 'Main dishes and entrees'),
+('Desserts', 'Sweet treats and desserts'),
+('Beverages', 'Drinks and refreshments'),
+('Salads', 'Fresh and healthy salads');
 
--- Insert sample products
+-- Insert sample products (Food items)
 INSERT INTO products (category_id, name, description, price, stock, status) VALUES
-(1, 'Wireless Headphones', 'High-quality Bluetooth headphones with noise cancellation', 79.99, 50, 'active'),
-(1, 'Smartphone', 'Latest model smartphone with advanced features', 599.99, 30, 'active'),
-(2, 'Cotton T-Shirt', 'Comfortable cotton t-shirt available in multiple colors', 19.99, 100, 'active'),
-(2, 'Jeans', 'Classic denim jeans', 49.99, 75, 'active'),
-(3, 'Coffee Beans', 'Premium Arabica coffee beans', 12.99, 200, 'active'),
-(3, 'Organic Honey', 'Pure organic honey', 8.99, 150, 'active'),
-(4, 'Garden Tools Set', 'Complete set of gardening tools', 45.99, 40, 'active'),
-(5, 'Programming Guide', 'Comprehensive programming tutorial book', 39.99, 60, 'active');
+(1, 'Spring Rolls', 'Crispy vegetable spring rolls served with sweet chili sauce', 6.99, 50, 'active'),
+(1, 'Chicken Wings', 'Spicy buffalo chicken wings with ranch dressing', 9.99, 40, 'active'),
+(2, 'Grilled Salmon', 'Fresh Atlantic salmon grilled to perfection with herbs', 18.99, 30, 'active'),
+(2, 'Beef Burger', 'Juicy beef burger with lettuce, tomato, and special sauce', 12.99, 50, 'active'),
+(2, 'Pasta Carbonara', 'Creamy pasta with bacon and parmesan cheese', 14.99, 45, 'active'),
+(3, 'Chocolate Lava Cake', 'Warm chocolate cake with molten center and vanilla ice cream', 7.99, 35, 'active'),
+(3, 'Tiramisu', 'Classic Italian dessert with coffee and mascarpone', 6.99, 40, 'active'),
+(4, 'Fresh Orange Juice', 'Freshly squeezed orange juice', 4.99, 100, 'active'),
+(4, 'Iced Coffee', 'Cold brew coffee served over ice', 3.99, 80, 'active'),
+(5, 'Caesar Salad', 'Crisp romaine lettuce with Caesar dressing and croutons', 8.99, 60, 'active'),
+(5, 'Greek Salad', 'Fresh vegetables with feta cheese and olives', 9.99, 55, 'active');

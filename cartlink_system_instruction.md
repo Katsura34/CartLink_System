@@ -1,11 +1,11 @@
-# 🚀 **Full Prompt Script / Detailed Description (Web-Based Ordering System --- PHP API + MySQL in XAMPP + HTML/JS Frontend)**
+# 🚀 **Full Prompt Script / Detailed Description (Web-Based Food Ordering System --- PHP API + MySQL in XAMPP + HTML/JS Frontend)**
 
 > **Use this prompt to let an AI system build, scaffold, or enhance your
-> ordering system project.**
+> food ordering system project.**
 
 ## PROJECT OVERVIEW
 
-Build a fully operational **web-based ordering system** anchored on:
+Build a fully operational **web-based food ordering system** anchored on:
 
 -   **Frontend:** HTML, CSS, JavaScript
 -   **Backend:** PHP API
@@ -20,8 +20,8 @@ management.
 
 ## CORE SYSTEM OBJECTIVES
 
-1.  Deliver a user-friendly online ordering platform
-2.  Provide tools for administrators to manage inventory, products, and
+1.  Deliver a user-friendly online food ordering platform
+2.  Provide tools for administrators to manage inventory, menu items, and
     incoming orders
 3.  Maintain real-time order tracking for customers
 4.  Enforce secure authentication and authorization flows
@@ -40,17 +40,17 @@ management.
 -   Password hashing
 -   Profile viewing
 
-### 2. Product Catalog
+### 2. Menu Catalog
 
--   Product listing page
--   Product search and filtering
--   Product detail view
+-   Menu item listing page
+-   Menu search and filtering
+-   Menu item detail view
 -   Stock display
 -   Category management (admin)
 
 ### 3. Shopping Cart
 
--   Add/remove products
+-   Add/remove menu items
 -   Update quantities
 -   Cart summary
 -   LocalStorage or API cart storage
@@ -81,9 +81,9 @@ Completed → Cancelled**
 -   View financial totals
 -   Search orders
 
-### 7. Product Management (Admin)
+### 7. Menu Item Management (Admin)
 
--   Add, edit, delete products
+-   Add, edit, delete menu items
 -   Upload images
 -   Manage price, category, description
 -   Stock updates
