@@ -13,7 +13,7 @@ define('APP_VERSION', '1.0.0');
 // Path Configuration (adjust based on deployment)
 // For root deployment use: '/'
 // For subdirectory use: '/CartLink_System/' or your folder name
-define('APP_BASE_PATH', '/CartLink_System/');
+define('APP_BASE_PATH', '/');
 
 // Security Configuration
 // ⚠️ CRITICAL: Generate a NEW secure random key for production!
